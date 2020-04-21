@@ -7,7 +7,7 @@ window.Initialize = async (elements) => {
     }
 
     try {
-        let stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { width: 640, height: 480 } });
+        let stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { width: 400, height: 240 } });
         handleSuccess(stream);
     } catch (e) {
         console.log(e);
@@ -18,7 +18,7 @@ window.Initialize = async (elements) => {
 window.Snap = async (src, dest) => {
     let video = document.getElementById(src);
     let ctx = get2DContext(dest);
-    ctx.drawImage(video, 0, 0, 640, 480);
+    ctx.drawImage(video, 0, 0, 400, 240);
 }
 
 // Get image as base64 string
