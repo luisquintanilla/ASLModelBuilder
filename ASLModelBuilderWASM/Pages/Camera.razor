@@ -1,0 +1,59 @@
+﻿@page "/camera"
+@inject HttpClient Client
+@inject IJSRuntime JsRuntime
+
+<div class="video-wrap">
+    <video id="video" playsinline autoplay></video>
+</div>
+
+<div class="controller">
+    <button @onclick="Snap">Capture</button>
+</div>
+
+<div>
+    <p>@Prediction</p>
+</div>
+
+<div>
+    <canvas id="capturedImage" width="640" height="480"></canvas>
+</div>
+
+
+<h3>Camera</h3>
+
+@code {
+    private string Prediction;
+
+    // Start capturing video
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Prediction = "";
+        await JsRuntime.InvokeVoidAsync("Initialize", new Dictionary<string, string>
+    {
+            {"video", "video"}
+        });
+    }
+
+    // Take a picture
+    private async Task Snap()
+    {
+        Console.WriteLine("Taking picture");
+        await JsRuntime.InvokeVoidAsync("Snap", "video", "capturedImage");
+
+        var imageBytes = await JsRuntime.InvokeAsync<string>("GetImageData", "capturedImage", "image/jpeg");
+        var json = JsonSerializer.Serialize(new Dictionary<string, string> { { "data", imageBytes } });
+
+        var req = await Client.PostAsync("https://localhost:44330/api/prediction", new StringContent(json, Encoding.UTF8, "application/json"));
+        var res = await req.Content.ReadAsStringAsync();
+        var body = JsonSerializer.Deserialize<PredictionResponse>(res);
+
+        Prediction = $"Prediction: {body.Prediction}";
+
+    }
+
+    class PredictionResponse
+    {
+        [JsonPropertyName("prediction")]
+        public string Prediction { get; set; }
+    }
+}
