@@ -2,34 +2,32 @@
 @inject HttpClient Client
 @inject IJSRuntime JsRuntime
 
-<div class="video-wrap">
-    <video id="video" playsinline autoplay></video>
-</div>
-
-<div class="controller">
-    <button @onclick="StartCamera">Start Camera</button>
-    <button @onclick="Snap">Capture</button>
-    <button @onclick="DeleteLetter">Delete</button>
-</div>
-
-<div>
-    <p class="display-4">@DisplayText</p>
-</div>
-
-<div>
-    <canvas id="capturedImage" width="640" height="480"></canvas>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <button @onclick="StartCamera">Start Camera</button>
+        </div>
+        <div class="col-sm">
+            <button @onclick="Snap">Capture</button>
+            <button @onclick="DeleteLetter">Delete</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="video-wrap col-sm">
+            <video id="video" playsinline autoplay></video>
+        </div>
+        <div class="col-sm">
+            <canvas id="capturedImage" width="640" height="480"></canvas>
+            <p class="display-4">@DisplayText</p>
+        </div>
+    </div>
 </div>
 
 @code {
-    private List<string> capturedText;
-    private string DisplayText;
+    private List<string> capturedText = new List<string>();
+    private string DisplayText = "";
 
-    protected override async Task OnInitializedAsync()
-    {
-        DisplayText = "";
-        capturedText = new List<string>();
-    }
-
+    // Start camera capture
     private async Task StartCamera()
     {
         await JsRuntime.InvokeVoidAsync("Initialize", new Dictionary<string, string>
@@ -37,7 +35,6 @@
                 {"video", "video"}
         });
     }
-
 
     // Take a picture
     private async Task Snap()
