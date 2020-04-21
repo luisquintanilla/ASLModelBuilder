@@ -7,32 +7,37 @@
 </div>
 
 <div class="controller">
+    <button @onclick="StartCamera">Start Camera</button>
     <button @onclick="Snap">Capture</button>
+    <button @onclick="DeleteLetter">Delete</button>
 </div>
 
 <div>
-    <p>@Prediction</p>
+    <p class="display-4">@DisplayText</p>
 </div>
 
 <div>
     <canvas id="capturedImage" width="640" height="480"></canvas>
 </div>
 
-
-<h3>Camera</h3>
-
 @code {
-    private string Prediction;
+    private List<string> capturedText;
+    private string DisplayText;
 
-    // Start capturing video
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        Prediction = "";
+        DisplayText = "";
+        capturedText = new List<string>();
+    }
+
+    private async Task StartCamera()
+    {
         await JsRuntime.InvokeVoidAsync("Initialize", new Dictionary<string, string>
-    {
-            {"video", "video"}
+        {
+                {"video", "video"}
         });
     }
+
 
     // Take a picture
     private async Task Snap()
@@ -47,7 +52,30 @@
         var res = await req.Content.ReadAsStringAsync();
         var body = JsonSerializer.Deserialize<PredictionResponse>(res);
 
-        Prediction = $"Prediction: {body.Prediction}";
+        AddLetter(body.Prediction);
+
+        Console.WriteLine(capturedText.Count);
+
+        foreach(var el in capturedText)
+        {
+            Console.WriteLine(el);
+        }
+
+        DisplayText = $"Text: {string.Join("",capturedText)}";
+    }
+
+    private void AddLetter(string letter)
+    {
+        capturedText.Add(letter);
+    }
+
+    private void DeleteLetter()
+    {
+        if(capturedText.Count > 0)
+        {
+            capturedText.RemoveAt(capturedText.Count - 1);
+            DisplayText = $"Text: {string.Join("", capturedText)}";
+        }
 
     }
 

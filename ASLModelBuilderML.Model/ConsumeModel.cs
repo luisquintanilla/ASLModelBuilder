@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.ML;
 using ASLModelBuilderML.Model;
+using System.IO;
+using System.Reflection;
 
 namespace ASLModelBuilderML.Model
 {
@@ -33,7 +35,7 @@ namespace ASLModelBuilderML.Model
             mlContext.ComponentCatalog.RegisterAssembly(typeof(LabelMapping).Assembly);
 
             // Load model & create prediction engine
-            string modelPath = @"C:\Users\luquinta.REDMOND\AppData\Local\Temp\MLVSTools\ASLModelBuilderML\ASLModelBuilderML.Model\MLModel.zip";
+            string modelPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "MLModel.zip");
             ITransformer mlModel = mlContext.Model.Load(modelPath, out var modelInputSchema);
             var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
 

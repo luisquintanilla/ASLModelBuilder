@@ -16,4 +16,10 @@
   <ItemGroup>
     <ProjectCapability Include="ModelBuilderGenerated" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="H.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

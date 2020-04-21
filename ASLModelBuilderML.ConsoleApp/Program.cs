@@ -12,7 +12,8 @@ namespace ASLModelBuilderML.ConsoleApp
             // Create single instance of sample data from first line of dataset for model input
             ModelInput sampleData = new ModelInput()
             {
-                ImageSource = @"C:\Users\luquinta.REDMOND\Downloads\significant-asl-sign-language-alphabet-dataset\Training Set\A\A0 (2).jpg",
+                //Source: https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/H%40BackForward.jpg/120px-H%40BackForward.jpg
+                ImageSource = "H.jpg",
             };
 
             // Make a single prediction on the sample data and print results
